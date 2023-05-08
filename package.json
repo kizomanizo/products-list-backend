@@ -1,0 +1,25 @@
+{
+  "name": "products-list-backend",
+  "version": "0.0.1",
+  "description": "A simple API backend for products.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kizomanizo/products-list-backend.git"
+  },
+  "keywords": [
+    "api",
+    "products",
+    "backend",
+    "api"
+  ],
+  "author": "Kizito Mrema",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kizomanizo/products-list-backend/issues"
+  },
+  "homepage": "https://github.com/kizomanizo/products-list-backend#readme"
+}
