@@ -1,19 +1,22 @@
-import Express from "express";
+import Express, { Request, Response } from "express";
+import ProductRouter from "./routes/productRouter";
+import { handleError } from "./helpers/handleError";
+
 const app = Express();
 const port = 4010;
-const productsRouter = require('../routes/productRoutes');
-import { handleError } from '../helpers/handleError';
 
-app.disable('x-powered-by');
+app.disable("x-powered-by");
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: false }));
-app.use('/api/v1/products', productsRouter);
+app.use("/api/v1/products", ProductRouter.getRouter());
 
-app.listen (port, () => {
+app.listen(port, () => {
   // tslint:disable-next-line:no-console
-  console.log("INFO: App listening on "+port);
-})
+  console.log("INFO: App listening on " + port);
+});
 
-app.use((err:any, req:any, res:any, next:any) => { handleError(err, res, next) })
+app.use((err: Error, req: Request, res: Response, next: any) => {
+  handleError(err, res, next);
+});
 
 module.exports = app;
