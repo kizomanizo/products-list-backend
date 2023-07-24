@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { IRouter } from "../ts/interfaces/router.interfaces"; // Import the interface
-import ProductController from "../controllers/productController";
+import ProductController from "../controllers/productController"; // Import the controller
 
 class ProductRouter implements IRouter {
   public router: Router;
@@ -10,8 +10,8 @@ class ProductRouter implements IRouter {
     this.router = Router();
 
     // Defining routes
-    this.router.route("/").get(ProductController.all);
-    this.router.post("/", ProductController.create);
+    this.router.route("/").get(ProductController.getProducts);
+    this.router.post("/", ProductController.createProduct);
   }
 
   public getRouter(): Router {

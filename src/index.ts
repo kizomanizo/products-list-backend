@@ -1,22 +1,47 @@
-import Express, { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import ProductRouter from "./routes/productRouter";
-import { handleError } from "./helpers/handleError";
+import ErrorHandler from "./helpers/errorHandler";
 
-const app = Express();
-const port = 4010;
+class AppServer {
+  private app: express.Application;
+  private port: number | string;
 
-app.disable("x-powered-by");
-app.use(Express.json());
-app.use(Express.urlencoded({ extended: false }));
-app.use("/api/v1/products", ProductRouter.getRouter());
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  // tslint:disable-next-line:no-console
-  console.log("INFO: App listening on " + port);
-});
+    this.initializeMiddleware();
+    this.initializeRoutes();
+    this.initializeErrorHandling();
+  }
 
-app.use((err: Error, req: Request, res: Response, next: any) => {
-  handleError(err, res, next);
-});
+  private initializeMiddleware(): void {
+    this.app.disable("x-powered-by");
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
+  }
 
-module.exports = app;
+  private initializeRoutes(): void {
+    this.app.use("/api/v1/products", ProductRouter.getRouter());
+  }
+
+  private initializeErrorHandling(): void {
+    // Catch-all error handler middleware
+    const errorHandlerInstance = new ErrorHandler();
+
+    this.app.use((err: any, req: Request, res: Response, next: any) => {
+      errorHandlerInstance.handleError(err, req, res, next);
+    });
+  }
+
+  public start(): void {
+    this.app.listen(this.port, () => {
+      console.log("INFO: App listening on " + this.port);
+    });
+  }
+}
+
+export default AppServer;
+
+const appServer = new AppServer();
+appServer.start();

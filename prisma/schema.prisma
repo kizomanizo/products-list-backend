@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique @default(uuid())
+  email     String    @unique
+  password  String
+  lastLogin DateTime?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+  createdBy String?   @default("System")
+  updatedBy String?
+
+  Person Person[]
+}
+
+model Person {
+  id         Int       @id @default(autoincrement())
+  uuid       String    @unique @default(uuid())
+  firstName  String
+  middleName String?
+  lastName   String
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime?
+  createdBy  String?   @default("System")
+  updatedBy  String?
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  uuid        String    @unique @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime?
+  createdBy   String?   @default("System")
+  updatedBy   String?
+
+  product Product[]
+}
+
+model Product {
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique @default(uuid())
+  name      String
+  cost      Int
+  price     Int
+  isActive  Boolean?  @default(true)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+  createdBy String?   @default("System")
+  updatedBy String?
+
+  sales    Sale[]
+  category Category[]
+}
+
+model Sale {
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique @default(uuid())
+  type      String
+  paid      Int
+  quantity  Int
+  isActive  Boolean
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+  createdBy String?   @default("System")
+  updatedBy String?
+  Product   Product?  @relation(fields: [productId], references: [id])
+  productId Int?
+}
